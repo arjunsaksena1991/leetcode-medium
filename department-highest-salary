@@ -1,0 +1,17 @@
+with max_salary_department as 
+(
+select d.name as departmentName, max(salary) as max_salary
+from employee e
+join department d
+on e.departmentId = d.Id
+group by departmentid
+)
+select dd.name as Department, ee.Name as Employee, ee.salary as Salary
+from employee ee
+left join department dd
+on ee.departmentId = dd.id
+where (dd.name, ee.salary) in
+(
+    select departmentName, max_salary 
+    from max_salary_department
+)
