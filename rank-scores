@@ -1,0 +1,18 @@
+with score_rank as
+(
+select 
+s.score as distinct_score, @i:=@i+1 as temp_rank
+FROM 
+(select distinct score from scores order by score desc) as s,
+(SELECT @i:=0) as t
+)
+select ss.score as score, round(sr.temp_rank,0) as 'Rank'
+from scores ss
+left join score_rank sr
+on ss.score = sr.distinct_score
+order by ss.score desc
+
+
+Reference: 
+https://www.mysqltutorial.org/mysql-row_number/#:~:text=MySQL%20ROW_NUMBER%20%E2%80%93%20adding%20a%20row%20number%20for%20each%20row&text=In%20this%20example%3A,by%20one%20for%20each%20row.
+https://stackoverflow.com/questions/1895110/row-number-in-mysql
