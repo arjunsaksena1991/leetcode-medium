@@ -1,0 +1,24 @@
+with book_less_month as
+(
+select book_id
+from books 
+where 
+available_from between date_add("2019-06-23", interval -30 day) and "2019-06-23" 
+),
+book_copies as
+(
+select book_id, sum(quantity) as books_sold
+from orders
+where 
+book_id not in (select book_id from book_less_month)
+and 
+dispatch_date between date_add("2019-06-23", interval -365 day) and "2019-06-23"
+group by book_id
+having sum(quantity) >= 10
+)
+select book_id, name
+from books 
+where 
+book_id not in (select book_id from book_less_month) 
+and
+book_id not in (select book_id from book_copies)
