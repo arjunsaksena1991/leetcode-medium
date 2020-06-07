@@ -1,0 +1,17 @@
+with event_type_avg as
+(
+select event_type, round(avg(occurences),2) as avg_occurence
+from events
+group by event_type
+),
+comb_events as
+(
+select business_id, e.event_type as event_type, e.occurences as occurences, et.avg_occurence as avg_occurences
+from events e
+left join event_type_avg et
+on e.event_type = et.event_type
+)
+select business_id from comb_events
+where occurences > avg_occurences
+group by business_id
+having count(occurences) > 1
