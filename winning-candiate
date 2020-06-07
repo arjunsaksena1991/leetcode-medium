@@ -1,0 +1,11 @@
+with vote_count as
+(
+select candidateid, count(candidateid) as votecount
+from vote 
+group by candidateid
+)
+select Name
+from candidate c
+left join vote_count v
+on c.id = v.candidateid
+where v.votecount = (select max(votecount) from vote_count)
