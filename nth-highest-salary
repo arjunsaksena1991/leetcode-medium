@@ -1,0 +1,13 @@
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+DECLARE A INT;
+SET A=N-1;
+  RETURN (
+  select distinct salary 
+      from Employee  
+      order by salary desc
+      limit 1 offset A
+  );
+END
+
+Have to declare variable = N-1 | N-1 directly on the limit is returning error
