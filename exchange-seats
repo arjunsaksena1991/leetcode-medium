@@ -1,0 +1,11 @@
+select a.id as id,b.student as student
+from seat a
+inner join seat b
+on 
+case
+when (a.id = (select max(id) from seat)) and (a.id % 2 = 1) then b.id = a.id
+when a.id % 2 = 1 then b.id = a.id + 1
+when a.id % 2 = 0 then b.id = a.id - 1
+end
+group by a.id
+order by a.id
