@@ -1,0 +1,18 @@
+with tax_block as 
+(
+select company_id, max(salary) as max_company_salary,
+case
+when max(salary) < 1000 then 0
+when max(salary) between 1000 and 10000 then 0.24
+when max(salary) > 10000 then 0.49
+end as tax_percent
+from salaries
+group by company_id
+)
+select s.company_id as company_id, 
+s.employee_id as employee_id, 
+s.employee_name as employee_name, 
+round(salary*(1-tax_percent),0) as salary
+from salaries s
+left join tax_block t
+on s.company_id = t.company_id
