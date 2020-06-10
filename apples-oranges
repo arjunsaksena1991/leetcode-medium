@@ -1,0 +1,10 @@
+with sales_vol as (
+select sale_date,
+sum(if(fruit = "apples",sold_num,0)) as apple_sales,
+sum(if(fruit = "oranges",sold_num,0)) as orange_sales
+from sales
+group by sale_date
+)
+select sale_date, (apple_sales - orange_sales) as diff
+from sales_vol
+order by sale_date
