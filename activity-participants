@@ -1,0 +1,11 @@
+with mm_activity as (
+select activity, count(activity) as count_activity
+from friends
+group by activity
+)
+select activity
+from mm_activity
+where 
+count_activity != (select max(count_activity) from mm_activity)
+and 
+count_activity != (select min(count_activity) from mm_activity)
