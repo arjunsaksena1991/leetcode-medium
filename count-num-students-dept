@@ -1,0 +1,11 @@
+with dept_count as 
+(
+select dept_id, count(dept_id) as student_number
+from student
+group by dept_id
+)
+select d.dept_name as dept_name, coalesce(dc.student_number,0) as student_number
+from department d
+left join dept_count dc
+on d.dept_id = dc.dept_id
+order by student_number desc
