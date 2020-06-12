@@ -1,0 +1,15 @@
+with temp_tab as (
+select left_operand,
+(select value from variables where name = left_operand) as num_left,
+operator,
+right_operand,
+(select value from variables where name = right_operand) as num_right
+from expressions
+)
+select left_operand, operator, right_operand,
+case
+when operator = "=" then if(num_left = num_right, "true","false")
+when operator = ">" then if(num_left > num_right, "true","false")
+when operator = "<" then if(num_left < num_right, "true","false")
+end as value
+from temp_tab
