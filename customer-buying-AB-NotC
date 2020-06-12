@@ -1,0 +1,30 @@
+Solution 1:
+with product_bought as (
+select distinct customer_id
+from orders
+where
+customer_id in (select distinct customer_id from orders where product_name = "B")
+and 
+customer_id in (select distinct customer_id from orders where product_name = "A")
+and 
+customer_id not in (select distinct customer_id from orders where product_name = "C")
+)
+select c.customer_id as customer_id, customer_name
+from customers c
+left join product_bought pb
+on c.customer_id = pb.customer_id
+where pb.customer_id is not null
+
+Solution 2:
+select customer_id, customer_name
+from customers 
+where customer_id in
+(select distinct customer_id
+from orders
+where
+customer_id in (select distinct customer_id from orders where product_name = "B")
+and 
+customer_id in (select distinct customer_id from orders where product_name = "A")
+and 
+customer_id not in (select distinct customer_id from orders where product_name = "C")
+)
