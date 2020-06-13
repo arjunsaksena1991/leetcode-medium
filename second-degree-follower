@@ -1,0 +1,12 @@
+with follower_list as
+(
+select distinct f1.follower as ff
+from follow f1
+join follow f2
+on f1.follower = f2.followee
+)
+select followee as follower, count(distinct follower) as num
+from follow
+where followee in (select ff from follower_list) and followee <> follower
+group by followee
+order by follower
