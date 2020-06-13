@@ -1,0 +1,15 @@
+with temp_log as (
+select question_id,
+sum(
+if(action = "show", 1,0)
+) as show_q,
+sum(
+if(action = "answer",1,0)
+) as answer_q
+from survey_log
+group by question_id
+)
+select question_id as survey_log
+from temp_log
+order by (answer_q / show_q) desc
+limit 1
