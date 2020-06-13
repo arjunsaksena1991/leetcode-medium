@@ -1,0 +1,23 @@
+with total_contacts as 
+(
+ select user_id, count(contact_name) as contact_cnt
+ from contacts
+ group by user_id
+),
+trusted_contacts as 
+(
+ select user_id, 
+ count(contact_name) as trusted_contacts_cnt
+ from contacts
+ where (contact_name, contact_email) in (select customer_name, email from customers)
+ group by user_id
+)
+select invoice_id, c.customer_name as customer_name, price, coalesce(tc.contact_cnt,0) as contacts_cnt, coalesce(tcs.trusted_contacts_cnt,0) as trusted_contacts_cnt
+from invoices i
+left join customers c 
+on i.user_id = c.customer_id
+left join total_contacts tc
+on i.user_id = tc.user_id
+left join trusted_contacts tcs
+on i.user_id = tcs.user_id
+order by invoice_id
