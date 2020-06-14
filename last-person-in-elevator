@@ -1,0 +1,16 @@
+with weight_queue as 
+(
+select person_id, person_name, weight, turn, @i :=@i + weight as total_weight
+from 
+(
+    select person_id, person_name, weight, turn 
+    from queue
+    order by turn 
+) as ordered_q,
+(select @i:=0) as t
+)
+select person_name
+from weight_queue
+where total_weight <=1000
+order by total_weight desc
+limit 1
