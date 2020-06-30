@@ -1,0 +1,12 @@
+with ce as (
+  select managerId, count(distinct name) as count_employee
+  from employee
+  where managerId is not null
+  group by managerId
+  having count(distinct name) >=5
+)
+select e.name as Name 
+from employee e
+left join ce c
+on c.managerId = e.id 
+where c.count_employee is not null
