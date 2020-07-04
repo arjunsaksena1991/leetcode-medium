@@ -1,0 +1,14 @@
+with total_score as
+(
+select gender,day,sum(score_points) as total
+from scores
+group by day, gender
+order by gender, day
+)
+select t1.gender as gender, t1.day as day, sum(t2.total) as total
+from total_score t1
+inner join total_score t2
+on t1.gender = t2.gender and 
+t1.day >= t2.day
+group by t1.gender, t1.day
+order by t1.gender, t1.day
