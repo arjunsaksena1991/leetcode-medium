@@ -1,0 +1,26 @@
+with caller_log as (
+select p.id as person_id, c.name as country_name,
+sum(if(p.id = ca.caller_id,ca.duration,0)) as sdca,
+sum(if(p.id = ca.caller_id,1,0)) as cdca,
+sum(if(p.id = ca.callee_id,ca.duration,0)) as sdc,
+sum(if(p.id = ca.callee_id,1,0)) as cdc
+from person p
+left join country c
+on c.country_code = left(p.phone_number,3)
+left join calls ca
+on 
+p.id = ca.caller_id
+or 
+p.id = ca.callee_id
+group by p.id
+)
+
+select country_name as country
+from caller_log
+group by country_name
+having
+(
+(sum(sdca) + sum(sdc)) / (sum(cdca) + sum(cdc))
+) 
+    >
+    (select avg(duration) from calls)
