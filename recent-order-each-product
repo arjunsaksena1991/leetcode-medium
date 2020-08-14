@@ -1,0 +1,11 @@
+with latest_buy as (
+select product_id, max(order_date) as max_date
+from orders
+group by product_id
+)
+select p.product_name as product_name, o.product_id as product_id, order_id, order_date
+from orders o
+left join products p 
+on o.product_id = p.product_id
+where (o.product_id, order_date) in (select product_id, max_date from latest_buy)
+order by p.product_name, o.product_id, o.order_id
