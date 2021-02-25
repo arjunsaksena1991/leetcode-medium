@@ -1,0 +1,10 @@
+with recursive temp as (
+    select 1 as number
+    union
+    select number + 1 as number
+    from temp
+    where temp.number < (select max(customer_id) from customers)
+)
+select number as ids
+from temp
+where number not in (select customer_id from customers)
