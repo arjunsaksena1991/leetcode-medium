@@ -1,0 +1,17 @@
+with temp as (
+select u.user_id as user_id, user_name,
+(credit + sum(case when u.user_id = t.paid_to then amount else 0 end) - sum(case when u.user_id = t.paid_by then amount else 0 end)) as credit
+from users u
+left join transactions t
+on 
+(u.user_id = t.paid_by or u.user_id = t.paid_to)
+group by u.user_id
+)
+select user_id, user_name, credit,
+(
+case
+ when credit < 0 then "Yes"
+ else "No"
+end
+) as credit_limit_breached
+from temp
