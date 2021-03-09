@@ -1,0 +1,18 @@
+select player_id, player_name, 
+sum( 
+    if(player_id = Wimbledon, 1, 0)+
+    if(player_id = Fr_open, 1, 0)+
+    if(player_id = US_open, 1, 0)+
+    if(player_id = Au_open, 1, 0)
+)
+as grand_slams_count
+from players p
+join championships 
+on
+(
+player_id = Wimbledon or 
+player_id = Fr_open or
+player_id = US_open or
+player_id = Au_open
+)
+group by player_id, player_name
